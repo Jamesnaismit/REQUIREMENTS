@@ -1,622 +1,104 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REquirements</title>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<style>
-  :root{
-    --bg:#faf8f4;
-    --bg-raised:#ffffff;
-    --surface:#f1efe9;
-    --surface-hover:#e9e6de;
-    --border:#e0ddd3;
-    --border-strong:#cbc7ba;
-    --text:#242220;
-    --text-dim:#6b675f;
-    --text-faint:#8f8b81;
-    --accent:#a8823f;
-    --accent-strong:#8c6a2f;
-    --accent-soft:rgba(168,130,63,0.10);
-    --accent-border:rgba(168,130,63,0.30);
-    --danger:#b4483a;
-    --radius:14px;
-  }
-  html[data-theme="dark"]{
-    --bg:#0a0b0d;
-    --bg-raised:#131518;
-    --surface:#15171b;
-    --surface-hover:#1a1d22;
-    --border:#232629;
-    --border-strong:#33373d;
-    --text:#edece6;
-    --text-dim:#93938d;
-    --text-faint:#55585c;
-    --accent:#c9a45c;
-    --accent-strong:#e3c07f;
-    --accent-soft:rgba(201,164,92,0.10);
-    --accent-border:rgba(201,164,92,0.28);
-    --danger:#c96a5c;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{background:var(--bg)}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    line-height:1.55;
-    padding-bottom:6rem;
-    font-size:17px;
-    transition:background .2s ease, color .2s ease;
-  }
-  a{color:var(--accent)}
-  input,select,button,textarea{font-family:inherit;color:inherit;font-size:1rem}
-  button{cursor:pointer}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-
-  header{max-width:40rem;margin:0 auto;padding:2.5rem 1.25rem 2rem}
-  header h1{font-size:1.7rem;font-weight:700;color:var(--text);margin-bottom:0.75rem}
-  header p{color:var(--text-dim);font-size:1.05rem;max-width:32rem}
-
-  .theme-toggle{
-    display:inline-flex;align-items:center;gap:0.6rem;margin-bottom:1.25rem;
-    font-size:0.85rem;color:var(--text-faint);
-  }
-  .theme-switch{
-    position:relative;width:44px;height:26px;flex-shrink:0;
-  }
-  .theme-switch input{
-    position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1;
-  }
-  .theme-switch .track{
-    position:absolute;inset:0;background:var(--border-strong);border-radius:99px;transition:background .2s ease;
-  }
-  .theme-switch .thumb{
-    position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
-    background:var(--bg-raised);box-shadow:0 1px 3px rgba(0,0,0,0.3);
-    transition:transform .2s ease;
-  }
-  .theme-switch input:checked ~ .track{background:var(--accent)}
-  .theme-switch input:checked ~ .thumb{transform:translateX(18px)}
-
-  .fields{margin-top:1.75rem;display:flex;flex-direction:column;gap:1rem;max-width:24rem}
-  .fields label{display:flex;flex-direction:column;gap:0.4rem;font-size:0.95rem;font-weight:600}
-  .fields input{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:0.7rem 0.8rem}
-  .fields input:focus{border-color:var(--accent)}
-
-  .progress-box{max-width:40rem;margin:0 auto 1.5rem;padding:0 1.25rem}
-  .progress-card{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    padding:1.25rem 1.4rem;display:flex;align-items:center;gap:1.25rem;position:relative;overflow:hidden;
-  }
-  .progress-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,transparent,var(--accent),transparent);
-  }
-  .ring-wrap{position:relative;width:64px;height:64px;flex-shrink:0}
-  .ring-wrap svg{transform:rotate(-90deg)}
-  .ring-track{fill:none;stroke:var(--border);stroke-width:6}
-  .ring-fill{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .5s ease}
-  .ring-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;color:var(--text)}
-  .progress-text strong{display:block;font-size:1.05rem;color:var(--text)}
-  .progress-text span{font-size:0.85rem;color:var(--text-faint)}
-
-  .deposit-box{max-width:40rem;margin:0 auto 2rem;padding:0 1.25rem}
-  .deposit-card{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    padding:1.25rem 1.4rem;display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;
-  }
-  .deposit-item{display:flex;flex-direction:column;gap:0.3rem}
-  .deposit-item span{font-size:0.85rem;color:var(--text-faint)}
-  .deposit-item strong{font-size:1.1rem;color:var(--text)}
-  .deposit-card select{border:2px solid var(--border);border-radius:8px;padding:0.5rem 0.6rem;background:var(--bg-raised)}
-
-  main{max-width:40rem;margin:0 auto;padding:0 1.25rem;display:flex;flex-direction:column;gap:1.5rem}
-  .section{background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
-  .section-head{margin-bottom:1rem}
-  .section-head h2{font-size:1.25rem;font-weight:700;color:var(--text)}
-  .section-head p{color:var(--text-faint);font-size:0.95rem;margin-top:0.35rem}
-  .section-count{
-    display:inline-block;margin-top:0.6rem;font-size:0.85rem;font-weight:600;
-    color:var(--accent-strong);background:var(--accent-soft);border:1px solid var(--accent-border);
-    padding:0.25rem 0.7rem;border-radius:99px;
-  }
-
-  .item{display:flex;gap:0.9rem;align-items:flex-start;padding:1rem 0;border-top:1px solid var(--border)}
-  .item:first-of-type{border-top:none}
-  .item input[type="checkbox"]{
-    appearance:none;-webkit-appearance:none;width:1.35rem;height:1.35rem;flex-shrink:0;margin-top:0.15rem;
-    border:2px solid var(--border-strong);border-radius:6px;background:var(--bg);position:relative;
-  }
-  .item input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent)}
-  .item input[type="checkbox"]:checked::after{
-    content:'';position:absolute;left:4px;top:0px;width:6px;height:11px;
-    border:solid #0a0b0d;border-width:0 2px 2px 0;transform:rotate(45deg);
-  }
-  .item-body{flex:1;min-width:0}
-  .item label{font-weight:600;font-size:1.02rem;cursor:pointer;display:inline-block}
-  .item.is-checked label{color:var(--text-faint);text-decoration:line-through}
-  .item .desc{font-size:0.92rem;color:var(--text-faint);margin-top:0.3rem}
-  .optional-tag{font-size:0.75rem;color:var(--text-faint);border:1px solid var(--border-strong);border-radius:99px;padding:0.1rem 0.55rem;margin-left:0.5rem}
-
-  .note-input, .text-input{
-    width:100%;background:var(--bg);border:2px solid var(--border);border-radius:8px;
-    padding:0.6rem 0.7rem;font-size:0.95rem;margin-top:0.7rem;
-  }
-  .note-input:focus, .text-input:focus{border-color:var(--accent)}
-  .text-input{min-height:5.5rem;resize:vertical;font-family:inherit}
-
-  .color-list{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.8rem}
-  .color-chip{
-    display:flex;align-items:center;gap:0.5rem;background:var(--bg);border:1px solid var(--border);
-    border-radius:99px;padding:0.3rem 0.5rem 0.3rem 0.3rem;
-  }
-  .color-chip input[type="color"]{
-    width:1.7rem;height:1.7rem;border:none;border-radius:50%;padding:0;background:none;cursor:pointer;
-  }
-  .color-chip span{font-size:0.85rem;color:var(--text-dim);min-width:4.2rem}
-  .color-chip button{background:none;border:none;color:var(--text-faint);font-size:0.9rem;padding:0 0.2rem}
-  .color-chip button:hover{color:var(--danger)}
-  .add-color-btn{
-    background:none;border:1px dashed var(--border-strong);border-radius:99px;
-    color:var(--text-faint);font-size:0.85rem;padding:0.5rem 0.9rem;margin-top:0.8rem;
-  }
-  .add-color-btn:hover{border-color:var(--accent-border);color:var(--accent-strong)}
-
-  .toolbar{position:fixed;bottom:0;left:0;right:0;background:rgba(10,11,13,0.92);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:1rem 1.25rem}
-  .toolbar-inner{max-width:40rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;justify-content:space-between}
-  .filter-toggle{display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;color:var(--text-dim)}
-  .filter-toggle input{width:1.15rem;height:1.15rem;accent-color:var(--accent)}
-  .btn{font-size:0.95rem;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:0.65rem 1.1rem;border-radius:10px}
-  .btn.primary{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-strong)}
-  .btn.primary:hover{background:var(--accent);color:#0a0b0d}
-  .btn.ghost:hover{color:var(--danger);border-color:var(--danger)}
-  .btn:disabled{opacity:0.5;cursor:not-allowed}
-  .send-status{max-width:40rem;margin:0.6rem auto 0;padding:0 1.25rem;font-size:0.88rem}
-  .send-status.ok{color:#7fbf8f}
-  .send-status.err{color:var(--danger)}
-
-  @media(max-width:560px){
-    .toolbar-inner{flex-direction:column;align-items:stretch}
-    .toolbar-inner .btn, .toolbar-inner .filter-toggle{width:100%;justify-content:center;text-align:center}
-  }
-</style>
+<title>Checkout — Cleaning Crew Pack | CyberSolutions Stock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <label class="theme-toggle">
-    <span class="theme-switch">
-      <input type="checkbox" id="theme-switch-input">
-      <span class="track"></span>
-      <span class="thumb"></span>
-    </span>
-    <span id="theme-toggle-label">Light mode</span>
-  </label>
-  <h1>What We Need From You</h1>
-  <p>Fill in what you can below. Type your colors and text right on this page — check off anything else once you've sent it to us separately. When you're ready, hit "Send everything to us" at the bottom.</p>
-  <div class="fields">
-    <label>Your name or business
-      <input id="field-client" type="text" placeholder="e.g. Korava Expedition">
-    </label>
-    <label>Project
-      <input id="field-project" type="text" placeholder="e.g. New website">
-    </label>
-  </div>
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-mark">◆</span>
+        <span class="brand-name">CyberSolutions <em>Stock</em></span>
+    </div>
+    <div class="topbar-secure">🔒 Secure checkout</div>
 </header>
 
-<div class="progress-box">
-  <div class="progress-card">
-    <div class="ring-wrap">
-      <svg width="64" height="64" viewBox="0 0 64 64">
-        <circle class="ring-track" cx="32" cy="32" r="27"></circle>
-        <circle class="ring-fill" id="ring-fill" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6"></circle>
-      </svg>
-      <div class="ring-label" id="progress-pct">0%</div>
-    </div>
-    <div class="progress-text">
-      <strong id="progress-frac">0 of 0 done</strong>
-      <span>Your progress</span>
-    </div>
-  </div>
-</div>
+<main class="checkout">
 
-<div class="deposit-box">
-  <div class="deposit-card">
-    <div class="deposit-item">
-      <span>Starting deposit</span>
-      <strong>250,000 TZS</strong>
-    </div>
-    <div class="deposit-item">
-      <span>Payment status</span>
-      <select id="field-status">
-        <option value="received">Paid</option>
-        <option value="pending">Not paid yet</option>
-        <option value="invoiced">Invoice sent</option>
-      </select>
-    </div>
-  </div>
-</div>
+    <!-- LEFT: locked preview -->
+    <section class="preview-pane">
+        <div class="preview-head">
+            <h1>Cleaning Crew — Editorial Pack</h1>
+            <p class="preview-sub">24 high-resolution photographs · full commercial licence · unlocks instantly after payment</p>
+        </div>
 
-<main id="sections"></main>
+        <div class="sheet">
+            <div class="frame" style="--i:1"><img src="https://images.pexels.com/photos/6195129/pexels-photo-6195129.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">01</span></div>
+            <div class="frame" style="--i:2"><img src="https://images.pexels.com/photos/14431051/pexels-photo-14431051.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">02</span></div>
+            <div class="frame" style="--i:3"><img src="https://images.pexels.com/photos/6195122/pexels-photo-6195122.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">03</span></div>
+            <div class="frame" style="--i:4"><img src="https://images.pexels.com/photos/6196685/pexels-photo-6196685.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">04</span></div>
+            <div class="frame" style="--i:5"><img src="https://images.pexels.com/photos/6196225/pexels-photo-6196225.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">05</span></div>
+            <div class="frame" style="--i:6"><img src="https://images.pexels.com/photos/6195121/pexels-photo-6195121.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">06</span></div>
+            <div class="frame" style="--i:7"><img src="https://images.pexels.com/photos/6196222/pexels-photo-6196222.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">07</span></div>
+            <div class="frame" style="--i:8"><img src="https://images.pexels.com/photos/9222791/pexels-photo-9222791.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">08</span></div>
+            <div class="frame" style="--i:9"><img src="https://images.pexels.com/photos/9222613/pexels-photo-9222613.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">09</span></div>
+            <div class="frame" style="--i:10"><img src="https://images.pexels.com/photos/7641351/pexels-photo-7641351.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Locked preview"><span class="frame-no">10</span></div>
 
-<div class="send-status" id="send-status"></div>
+            <div class="sheet-lock">
+                <div class="lock-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+                </div>
+                <p>Full-resolution files unlock the moment payment clears</p>
+            </div>
+        </div>
 
-<footer class="toolbar">
-  <div class="toolbar-inner">
-    <label class="filter-toggle"><input type="checkbox" id="filter-missing"> Only show what's left</label>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <button class="btn primary" id="btn-send">Send everything to us</button>
-      <button class="btn ghost" id="btn-reset">Start over</button>
-    </div>
-  </div>
-</footer>
+        <ul class="includes">
+            <li>24 RAW-graded JPEGs, 6000×4000px</li>
+            <li>Unlimited commercial &amp; editorial usage rights</li>
+            <li>Delivered as a zipped download to your email</li>
+        </ul>
+    </section>
 
-<script>
-(function(){
-  "use strict";
+    <!-- RIGHT: order ticket -->
+    <aside class="ticket">
+        <div class="ticket-body">
 
-  var EMAILJS_PUBLIC_KEY = 'm9L7H6RUt3wx7PmbB';
-  var EMAILJS_SERVICE_ID = 'service_e8rhgzw';
-  var EMAILJS_TEMPLATE_ID = 'template_zmt6cim';
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+            <div class="urgency-strip">
+                <span class="pulse-dot"></span>
+                <span id="viewerCount">14</span> people are viewing this pack right now
+            </div>
 
-  var THEME_KEY = 'client_checklist_theme';
-  (function initTheme(){
-    var saved;
-    try { saved = localStorage.getItem(THEME_KEY); } catch(e){ saved = null; }
-    var isDark = saved === 'dark';
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    document.addEventListener('DOMContentLoaded', function(){
-      var input = document.getElementById('theme-switch-input');
-      var label = document.getElementById('theme-toggle-label');
-      input.checked = isDark;
-      label.textContent = isDark ? 'Dark mode' : 'Light mode';
-      input.addEventListener('change', function(){
-        var dark = input.checked;
-        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-        label.textContent = dark ? 'Dark mode' : 'Light mode';
-        try { localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light'); } catch(e){}
-      });
-    });
-  })();
+            <h2 class="ticket-title">Cleaning Crew Pack</h2>
+            <p class="ticket-item-desc">Editorial &amp; commercial licence · 24 images</p>
 
-  var STORAGE_KEY = 'client_checklist_v2';
-  var mem = {};
-  var storage = {
-    get: function(k){ try { return localStorage.getItem(k); } catch(e){ return mem[k] || null; } },
-    set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){ mem[k]=v; } }
-  };
+            <div class="price-row">
+                <div class="price-main">
+                    <span class="price-usd" id="priceUsd">$20.38</span>
+                    <span class="price-tzs">TSh 54,000</span>
+                </div>
+                <span class="price-note">one-time payment</span>
+            </div>
 
-  var SECTIONS = [
-    {
-      id:'brand', number:'1',
-      title:'Logo & Colors',
-      description:'The look of your brand.',
-      items:[
-        {id:'logo', kind:'note', label:'Your logo', desc:'Check this once you\'ve sent us the best-quality copy of your logo you have.'},
-        {id:'colors', kind:'color', label:'Your brand colors', desc:'Pick the colors you want used on your website.'},
-        {id:'fonts', kind:'note', label:'Fonts you like', desc:'If you have a favorite style of lettering, tell us. If not, we\'ll choose for you.', optional:true},
-        {id:'styleguide', kind:'note', label:'Any existing brand rules', desc:'If someone already set rules for how your brand should look, share them.', optional:true}
-      ]
-    },
-    {
-      id:'copy', number:'2',
-      title:'Words for the Website',
-      description:'Type the text that will appear on your pages.',
-      items:[
-        {id:'homepage', kind:'text', label:'Homepage message', desc:'What you want visitors to see first — a short welcome and what you do.'},
-        {id:'innerpages', kind:'text', label:'Text for other pages', desc:'Like "About Us," your services, or your team.'},
-        {id:'contact', kind:'text', label:'Your contact details', desc:'Address, phone number, email, and your business hours.'},
-        {id:'legal', kind:'text', label:'Any legal text', desc:'For example a privacy notice, if you already have one.'}
-      ]
-    },
-    {
-      id:'media', number:'3',
-      title:'Photos & Pictures',
-      description:'We\'ll collect these separately — just check them off here once sent.',
-      items:[
-        {id:'hero', kind:'note', label:'A few good photos', desc:'Clear, high-quality photos for the top of your homepage.'},
-        {id:'team', kind:'note', label:'Photos of your team', desc:'If you\'d like your team shown on the site.', optional:true},
-        {id:'products', kind:'note', label:'Photos of your work', desc:'Pictures of your products, services, or past projects.'},
-        {id:'icons', kind:'note', label:'Any custom artwork', desc:'If you already have icons or drawings made for your brand.', optional:true}
-      ]
-    },
-    {
-      id:'structure', number:'4',
-      title:'Pages & Links',
-      description:'How your site fits together.',
-      items:[
-        {id:'sitemap', kind:'text', label:'A list of pages you want', desc:'Even a rough list is fine — for example Home, About, Contact.'},
-        {id:'social', kind:'text', label:'Links to your social pages', desc:'Facebook, Instagram, or anywhere else people can find you.'},
-        {id:'external', kind:'text', label:'Any other tools to connect', desc:'Like a booking system or another website you already use.', optional:true}
-      ]
-    }
-  ];
+            <div class="deadline-box">
+                <span class="deadline-label">Reserved for you — pay before this listing releases</span>
+                <div class="deadline-clock" id="clock">05:00:00</div>
+            </div>
 
-  var defaults = {
-    client:'', project:'', status:'received',
-    checked:{}, notes:{}, texts:{}, colors:{}
-  };
-  var state;
-  try {
-    var saved = JSON.parse(storage.get(STORAGE_KEY) || 'null');
-    state = Object.assign({}, defaults, saved || {});
-    state.checked = Object.assign({}, defaults.checked, (saved && saved.checked) || {});
-    state.notes = Object.assign({}, defaults.notes, (saved && saved.notes) || {});
-    state.texts = Object.assign({}, defaults.texts, (saved && saved.texts) || {});
-    state.colors = Object.assign({}, defaults.colors, (saved && saved.colors) || {});
-  } catch(e){ state = Object.assign({}, defaults); }
+            <div class="social-proof">
+                <div class="avatars">
+                    <span class="av" style="--c:#c9a227">EM</span>
+                    <span class="av" style="--c:#8b6f2f">HN</span>
+                    <span class="av" style="--c:#5c5346">RK</span>
+                    <span class="av more">+11</span>
+                </div>
+                <p id="ticker">Baraka from Dodoma bought this pack · 3m ago</p>
+            </div>
 
-  function persist(){ storage.set(STORAGE_KEY, JSON.stringify(state)); }
+            <button class="pay-btn" id="payBtn">
+                Pay <span id="payAmount">$20.38</span> — Unlock Pack
+            </button>
+            <p class="fine-print">One licence per checkout · price locks once payment starts · files stay blurred until confirmed</p>
+        </div>
+    </aside>
 
-  function allItems(){
-    var out = [];
-    SECTIONS.forEach(function(sec){
-      sec.items.forEach(function(it){ out.push(it); });
-    });
-    return out;
-  }
+</main>
 
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-  }
-
-  function renderSections(){
-    var root = document.getElementById('sections');
-    root.innerHTML = '';
-    SECTIONS.forEach(function(sec){
-      var doneCount = sec.items.filter(function(it){ return !!state.checked[it.id]; }).length;
-
-      var section = document.createElement('section');
-      section.className = 'section';
-      section.innerHTML =
-        '<div class="section-head">' +
-          '<h2>' + sec.number + '. ' + escapeHtml(sec.title) + '</h2>' +
-          '<p>' + escapeHtml(sec.description) + '</p>' +
-          '<span class="section-count">' + doneCount + ' of ' + sec.items.length + ' done</span>' +
-        '</div>' +
-        '<div class="item-list" data-section="' + sec.id + '"></div>';
-      root.appendChild(section);
-
-      var list = section.querySelector('.item-list');
-      sec.items.forEach(function(it){
-        var checked = !!state.checked[it.id];
-        var row = document.createElement('div');
-        row.className = 'item' + (checked ? ' is-checked' : '');
-
-        var innerFieldHtml = '';
-        if(it.kind === 'note'){
-          var note = state.notes[it.id] || '';
-          innerFieldHtml = '<input type="text" class="note-input" placeholder="Optional: a link or short note" value="' + escapeHtml(note) + '" data-role="note-input" data-item="' + it.id + '">';
-        } else if(it.kind === 'text'){
-          var txt = state.texts[it.id] || '';
-          innerFieldHtml = '<textarea class="text-input" placeholder="Type it here..." data-role="text-input" data-item="' + it.id + '">' + escapeHtml(txt) + '</textarea>';
-        } else if(it.kind === 'color'){
-          var cols = state.colors[it.id] || [];
-          innerFieldHtml =
-            '<div class="color-list" data-role="color-list" data-item="' + it.id + '">' +
-              cols.map(function(hex, i){
-                return '<div class="color-chip">' +
-                  '<input type="color" value="' + hex + '" data-role="color-swatch" data-item="' + it.id + '" data-index="' + i + '">' +
-                  '<span>' + hex.toUpperCase() + '</span>' +
-                  '<button data-role="color-remove" data-item="' + it.id + '" data-index="' + i + '" aria-label="Remove color">&times;</button>' +
-                '</div>';
-              }).join('') +
-            '</div>' +
-            '<button class="add-color-btn" data-role="color-add" data-item="' + it.id + '">+ Add a color</button>';
-        }
-
-        row.innerHTML =
-          '<input type="checkbox" id="chk-' + it.id + '" ' + (checked?'checked':'') + (it.kind !== 'note' ? ' disabled' : '') + '>' +
-          '<div class="item-body">' +
-            '<label for="chk-' + it.id + '">' + escapeHtml(it.label) + (it.optional ? '<span class="optional-tag">Not required</span>' : '') + '</label>' +
-            (it.desc ? '<div class="desc">' + escapeHtml(it.desc) + '</div>' : '') +
-            innerFieldHtml +
-          '</div>';
-        list.appendChild(row);
-      });
-    });
-
-    wireItemEvents();
-    updateProgress();
-  }
-
-  function wireItemEvents(){
-    document.querySelectorAll('.item input[type="checkbox"]:not([disabled])').forEach(function(cb){
-      cb.addEventListener('change', function(){
-        var id = cb.id.replace('chk-','');
-        if(cb.checked){ state.checked[id] = true; } else { delete state.checked[id]; }
-        cb.closest('.item').classList.toggle('is-checked', cb.checked);
-        persist();
-        updateProgress();
-        refreshSectionCounts();
-      });
-    });
-
-    document.querySelectorAll('[data-role="note-input"]').forEach(function(inp){
-      inp.addEventListener('input', function(){
-        state.notes[inp.dataset.item] = inp.value;
-        persist();
-      });
-    });
-
-    document.querySelectorAll('[data-role="text-input"]').forEach(function(ta){
-      ta.addEventListener('input', function(){
-        var id = ta.dataset.item;
-        state.texts[id] = ta.value;
-        var hasContent = ta.value.trim().length > 0;
-        state.checked[id] = hasContent;
-        var row = ta.closest('.item');
-        row.classList.toggle('is-checked', hasContent);
-        row.querySelector('input[type="checkbox"]').checked = hasContent;
-        persist();
-        updateProgress();
-        refreshSectionCounts();
-      });
-    });
-
-    document.querySelectorAll('[data-role="color-add"]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var id = btn.dataset.item;
-        state.colors[id] = state.colors[id] || [];
-        if(state.colors[id].length >= 6) return;
-        state.colors[id].push('#c9a45c');
-        syncColorChecked(id);
-        persist();
-        renderSections();
-      });
-    });
-
-    document.querySelectorAll('[data-role="color-swatch"]').forEach(function(inp){
-      inp.addEventListener('input', function(){
-        var id = inp.dataset.item, idx = parseInt(inp.dataset.index, 10);
-        state.colors[id][idx] = inp.value;
-        inp.closest('.color-chip').querySelector('span').textContent = inp.value.toUpperCase();
-        persist();
-      });
-    });
-
-    document.querySelectorAll('[data-role="color-remove"]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var id = btn.dataset.item, idx = parseInt(btn.dataset.index, 10);
-        state.colors[id].splice(idx, 1);
-        syncColorChecked(id);
-        persist();
-        renderSections();
-      });
-    });
-  }
-
-  function syncColorChecked(id){
-    var hasContent = (state.colors[id] || []).length > 0;
-    state.checked[id] = hasContent;
-  }
-
-  function refreshSectionCounts(){
-    document.querySelectorAll('.section').forEach(function(sectionEl, i){
-      var sec = SECTIONS[i];
-      var doneCount = sec.items.filter(function(it){ return !!state.checked[it.id]; }).length;
-      var countEl = sectionEl.querySelector('.section-count');
-      if(countEl) countEl.textContent = doneCount + ' of ' + sec.items.length + ' done';
-    });
-  }
-
-  function updateProgress(){
-    var items = allItems();
-    var total = items.length;
-    var done = items.filter(function(it){ return !!state.checked[it.id]; }).length;
-    var pct = total ? Math.round((done/total)*100) : 0;
-
-    var circumference = 169.6;
-    document.getElementById('ring-fill').style.strokeDashoffset = circumference - (circumference * pct/100);
-    document.getElementById('progress-pct').textContent = pct + '%';
-    document.getElementById('progress-frac').textContent = done + ' of ' + total + ' done';
-  }
-
-  function applyFilter(){
-    var on = document.getElementById('filter-missing').checked;
-    document.querySelectorAll('.item').forEach(function(row){
-      row.style.display = (on && row.classList.contains('is-checked')) ? 'none' : '';
-    });
-  }
-
-  function buildSummary(){
-    var lines = [];
-    SECTIONS.forEach(function(sec){
-      var done = sec.items.filter(function(it){ return !!state.checked[it.id]; }).length;
-      lines.push(sec.number + '. ' + sec.title + ' (' + done + ' of ' + sec.items.length + ')');
-      sec.items.forEach(function(it){
-        var mark = state.checked[it.id] ? '[done]' : '[ ]';
-        var extra = '';
-        if(it.kind === 'note' && state.notes[it.id]) extra = '  — ' + state.notes[it.id];
-        if(it.kind === 'text' && state.texts[it.id]) extra = '\n      ' + state.texts[it.id].replace(/\n/g, '\n      ');
-        lines.push('   ' + mark + ' ' + it.label + extra);
-      });
-      lines.push('');
-    });
-    return lines.join('\n');
-  }
-
-  function allBrandColors(){
-    var out = [];
-    Object.keys(state.colors).forEach(function(id){
-      (state.colors[id] || []).forEach(function(hex){ out.push(hex); });
-    });
-    return out.length ? out.join(', ') : '(none picked)';
-  }
-
-  function flashButton(btn, label, revertMs){
-    var original = btn.textContent;
-    btn.textContent = label;
-    if(revertMs){ setTimeout(function(){ btn.textContent = original; }, revertMs); }
-    return original;
-  }
-
-  function setSendStatus(msg, cls){
-    var el = document.getElementById('send-status');
-    el.textContent = msg;
-    el.className = 'send-status' + (cls ? ' ' + cls : '');
-  }
-
-  ['client','project'].forEach(function(key){
-    var el = document.getElementById('field-' + key);
-    el.value = state[key];
-    el.addEventListener('input', function(){ state[key] = el.value; persist(); });
-  });
-  var statusEl = document.getElementById('field-status');
-  statusEl.value = state.status;
-  statusEl.addEventListener('change', function(){ state.status = statusEl.value; persist(); });
-
-  document.getElementById('filter-missing').addEventListener('change', applyFilter);
-
-  document.getElementById('btn-send').addEventListener('click', function(){
-    var btn = this;
-    var items = allItems();
-    var total = items.length;
-    var done = items.filter(function(it){ return !!state.checked[it.id]; }).length;
-    var pct = total ? Math.round((done/total)*100) : 0;
-
-    var params = {
-      client_name: state.client || 'Not given',
-      project_name: state.project || 'Not given',
-      submit_date: new Date().toLocaleDateString(),
-      percent_done: String(pct),
-      items_done: String(done),
-      items_total: String(total),
-      summary_text: buildSummary(),
-      brand_colors: allBrandColors(),
-      image_count: '0'
-    };
-
-    btn.disabled = true;
-    var original = flashButton(btn, 'Sending...');
-    setSendStatus('', '');
-
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params).then(function(){
-      btn.textContent = original;
-      btn.disabled = false;
-      setSendStatus('Sent! We\'ve received your information.', 'ok');
-    }, function(err){
-      btn.textContent = original;
-      btn.disabled = false;
-      setSendStatus('Something went wrong sending this. Please try again in a moment.', 'err');
-      console.error('EmailJS error:', err);
-    });
-  });
-
-  document.getElementById('btn-reset').addEventListener('click', function(){
-    if(!confirm('Clear everything you\'ve entered? This can\'t be undone.')) return;
-    state = Object.assign({}, defaults, {checked:{}, notes:{}, texts:{}, colors:{}});
-    persist();
-    location.reload();
-  });
-
-  renderSections();
-})();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
